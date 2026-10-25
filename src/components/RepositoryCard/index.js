@@ -13,15 +13,15 @@ const RepositoryCard = props => {
   } = repositoryDetails
 
   return (
-    <Link to={`/repositories/${name}`} className='repoLinkContainer'>
-      <div data-testid='repoItem' className='repositoryItemContainer'>
-        <div className='repoHeaderContainer'>
-          <h1 className='repoItemHeading'>{name}</h1>
+    <Link to={`/repositories/${name}`} className="repoLinkContainer">
+      <div data-testid="repoItem" className="repositoryItemContainer">
+        <div className="repoHeaderContainer">
+          <h1 className="repoItemHeading">{name}</h1>
         </div>
 
-        <p className='repoItemDesc'>{description}</p>
+        <p className="repoItemDesc">{description}</p>
 
-        <div className='languagesListContainer'>
+        <div className="languagesListContainer">
           {languages.map(eachLanguage => (
             <Languages
               key={eachLanguage.value}
@@ -30,23 +30,23 @@ const RepositoryCard = props => {
           ))}
         </div>
 
-        <div className='repoCountContainer'>
-          <div className='starContainer'>
+        <div className="repoCountContainer">
+          <div className="starContainer">
             <img
-              src='https://res.cloudinary.com/ddsn9feta/image/upload/v1719294440/Star_-_16px.1_cpjsj4.png'
-              alt='star'
-              className='start-image'
+              src="https://res.cloudinary.com/ddsn9feta/image/upload/v1719294440/Star_-_16px.1_cpjsj4.png"
+              alt="star"
+              className="start-image"
             />
-            <p className='repoItemStar'>{stargazersCount}</p>
+            <p className="repoItemStar">{stargazersCount}</p>
           </div>
 
-          <div className='forksContainer'>
+          <div className="forksContainer">
             <img
-              src='https://res.cloudinary.com/ddsn9feta/image/upload/v1719294440/Git_3_w5zp4b.png'
-              alt='git'
-              className='git-image'
+              src="https://res.cloudinary.com/ddsn9feta/image/upload/v1719294440/Git_3_w5zp4b.png"
+              alt="git"
+              className="git-image"
             />
-            <p className='repoItemForks'>{forksCount}</p>
+            <p className="repoItemForks">{forksCount}</p>
           </div>
         </div>
       </div>

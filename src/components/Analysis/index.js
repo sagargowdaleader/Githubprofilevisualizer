@@ -47,7 +47,7 @@ class Analysis extends Component {
 
     this.setState({apiStatus: apiStatusConstants.inProgress})
 
-    const url = `https://apis2.ccbp.in/gpv/profile-summary/${username}?api_key=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`
+    const url = `https://apis2.ccbp.in/gpv/profile-summary/${username}?api_key={YOUR API_KEY}`
 
     try {
       const response = await fetch(url, {method: 'GET'})

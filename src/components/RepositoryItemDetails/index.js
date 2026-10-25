@@ -30,7 +30,7 @@ class RepositoryItemDetails extends Component {
 
     this.setState({apiStatus: apiStatusConstants.inProgress})
 
-    const url = `https://apis2.ccbp.in/gpv/specific-repo/${username}/${repoName}?api_key=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`
+    const url = `https://apis2.ccbp.in/gpv/specific-repo/${username}/${repoName}?api_key={YOUR API_KEY}`
 
     try {
       const response = await fetch(url)

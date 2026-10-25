@@ -35,7 +35,7 @@ class Home extends Component {
 
     const url = `https://apis2.ccbp.in/gpv/profile-details/${encodeURIComponent(
       username,
-    )}?api_key=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`
+    )}?api_key={YOUR API_KEY}`
 
     try {
       const response = await fetch(url)
