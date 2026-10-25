@@ -33,17 +33,28 @@ class Home extends Component {
       errorMsg: '',
     })
 
-    const url = `https://apis2.ccbp.in/gpv/profile-details/${username}?api_key=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`
+    const url = `https://apis2.ccbp.in/gpv/profile-details/${encodeURIComponent(
+      username,
+    )}?api_key=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`
 
     try {
-      const response = await fetch(url, {method: 'GET'})
+      const response = await fetch(url)
 
       if (!response.ok) {
-        this.setState({apiStatus: apiStatusConstants.failure})
+        this.setState({
+          apiStatus: apiStatusConstants.failure,
+        })
         return
       }
 
       const data = await response.json()
+
+      if (!data || !data.login) {
+        this.setState({
+          apiStatus: apiStatusConstants.failure,
+        })
+        return
+      }
 
       const updatedData = {
         avatarUrl: data.avatar_url,
@@ -62,24 +73,27 @@ class Home extends Component {
         profileDetails: updatedData,
         apiStatus: apiStatusConstants.success,
       })
-    } catch {
-      this.setState({apiStatus: apiStatusConstants.failure})
+    } catch (error) {
+      this.setState({
+        apiStatus: apiStatusConstants.failure,
+      })
     }
   }
 
   onClickSearch = () => {
     const {username} = this.context
 
-    if (username.trim() === '') {
+    if (!username || username.trim() === '') {
       this.setState({
         isError: true,
         errorMsg: 'Enter the valid github username',
         profileDetails: null,
         apiStatus: apiStatusConstants.initial,
       })
-    } else {
-      this.getGitHubUserProfileDetails(username.trim())
+      return
     }
+
+    this.getGitHubUserProfileDetails(username.trim())
   }
 
   renderGithubDetailsOfProfile = () => {
@@ -105,8 +119,9 @@ class Home extends Component {
     return (
       <div className="repo-item">
         <div className="profileDetailsContainer">
-          <img src={avatarUrl} alt={name} className="avatar-url" />
-          <h1 className="name">{name}</h1>
+          <img src={avatarUrl} alt={name || login} className="avatar-url" />
+
+          <h1 className="name">{name || login}</h1>
           <p className="login">{login}</p>
 
           <p className="bio-heading">BIO</p>
@@ -114,21 +129,21 @@ class Home extends Component {
 
           <div className="followers-following-public-container">
             <div className="followers-container">
-              <p className="followers">{followers}</p>
+              <p className="followers">{followers ?? 0}</p>
               <p className="followers-heading">FOLLOWERS</p>
             </div>
 
             <hr className="hor-line" />
 
             <div className="following-container">
-              <p className="followers">{following}</p>
+              <p className="followers">{following ?? 0}</p>
               <p className="followers-heading">FOLLOWING</p>
             </div>
 
             <hr className="hor-line" />
 
             <div className="pubic-repos-container">
-              <p className="followers">{publicRepos}</p>
+              <p className="followers">{publicRepos ?? 0}</p>
               <p className="followers-heading">PUBLIC REPOS</p>
             </div>
           </div>
@@ -154,6 +169,7 @@ class Home extends Component {
               <p className="company-heading">Blog</p>
               <div className="companyUrl">
                 <IoMdLink className="icon-style" />
+
                 {blog ? (
                   <a
                     href={blog}
@@ -177,12 +193,15 @@ class Home extends Component {
   renderFailureView = () => (
     <div className="failureContainer">
       <h1 className="heading">GitHub Profile Visualizer</h1>
+
       <img
         src="https://res.cloudinary.com/ddsn9feta/image/upload/v1718604995/Group_7522_f4ueqy.png"
         alt="failure view"
         className="error-view"
       />
+
       <p className="errorName">Something went wrong. Please try again</p>
+
       <button className="tryButton" type="button" onClick={this.onClickSearch}>
         Try Again
       </button>
@@ -198,6 +217,7 @@ class Home extends Component {
   renderHomeView = () => (
     <div>
       <h1 className="heading">GitHub Profile Visualizer</h1>
+
       <img
         src="https://res.cloudinary.com/ddsn9feta/image/upload/v1718599647/Group_21x-mobileview_iyuarb.png"
         alt="gitHub profile visualizer home page"
@@ -212,10 +232,13 @@ class Home extends Component {
     switch (apiStatus) {
       case apiStatusConstants.success:
         return this.renderGithubDetailsOfProfile()
+
       case apiStatusConstants.failure:
         return this.renderFailureView()
+
       case apiStatusConstants.inProgress:
         return this.renderLoaderView()
+
       default:
         return this.renderHomeView()
     }
@@ -228,12 +251,22 @@ class Home extends Component {
     return (
       <>
         <Header />
+
         <div className="home-container">
           <div className="input-container">
             <input
               type="search"
               value={username}
-              onChange={event => changeUserName(event.target.value)}
+              onChange={event => {
+                changeUserName(event.target.value)
+
+                if (isError) {
+                  this.setState({
+                    isError: false,
+                    errorMsg: '',
+                  })
+                }
+              }}
               placeholder="Enter github username"
               className="input-search-style"
             />
