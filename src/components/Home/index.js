@@ -33,7 +33,7 @@ class Home extends Component {
       errorMsg: '',
     })
 
-    const url = `REACT_APP_KEY=your_actual_token_here`
+    const url = `https://apis2.ccbp.in/gpv/profile-details/${username}?api_key=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`
 
     try {
       const response = await fetch(url)
@@ -254,6 +254,8 @@ class Home extends Component {
           <div className="input-container">
             <input
               type="search"
+              placeholder="Enter github username"
+              className="input-search-style"
               value={username}
               onChange={event => {
                 changeUserName(event.target.value)
@@ -265,8 +267,6 @@ class Home extends Component {
                   })
                 }
               }}
-              placeholder="Enter github username"
-              className="input-search-style"
             />
 
             <div className="search-icon-container">

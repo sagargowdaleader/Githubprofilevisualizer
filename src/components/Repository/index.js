@@ -37,7 +37,7 @@ class Repository extends Component {
 
     this.setState({apiStatus: apiStatusConstants.inProgress})
 
-    const url = `https://apis2.ccbp.in/gpv/repos/${username}?api_key=YOUR_API_KEY`
+    const url = `https://apis2.ccbp.in/gpv/repos/${username}?api_key=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`
 
     try {
       const response = await fetch(url, {method: 'GET'})
