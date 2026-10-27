@@ -1,37 +1,23 @@
 import {Component} from 'react'
 import {Link} from 'react-router-dom'
-
 import './index.css'
 
 class Header extends Component {
   state = {activeStatus: false}
 
   onClickMenuButton = () => {
-    this.setState(prevState => ({
-      activeStatus: !prevState.activeStatus,
-    }))
-  }
-
-  onClickNavLink = () => {
-    this.setState({activeStatus: false})
+    this.setState(prevState => ({activeStatus: !prevState.activeStatus}))
   }
 
   render() {
     const {activeStatus} = this.state
+    const currentPath = window.location.pathname
 
     return (
       <div className="container">
         <div data-testid="header" className="repo-item">
           <nav className="header-container">
-            <Link
-              to="/"
-              className="heading-nav-link"
-              onClick={this.onClickNavLink}
-            >
-              <img
-                src="https://res.cloudinary.com/ddsn9feta/image/upload/v1718691523/menu_l33xs7.png"
-                alt="gitHub profile visualizer home page"
-              />
+            <Link to="/" className="heading-nav-link">
               <h1 className="header-heading">GitHub Profile Visualizer</h1>
             </Link>
 
@@ -48,12 +34,15 @@ class Header extends Component {
               />
             </button>
 
-            <ul className="items-nav">
+            <ul className={`items-nav ${activeStatus ? 'active' : ''}`}>
               <li>
                 <Link
                   to="/"
-                  className="item-nav-link"
-                  onClick={this.onClickNavLink}
+                  className={
+                    currentPath === '/'
+                      ? 'active-link item-nav-link'
+                      : 'item-nav-link'
+                  }
                 >
                   Home
                 </Link>
@@ -61,8 +50,11 @@ class Header extends Component {
               <li>
                 <Link
                   to="/repositories"
-                  className="item-nav-link"
-                  onClick={this.onClickNavLink}
+                  className={
+                    currentPath === '/repositories'
+                      ? 'active-link item-nav-link'
+                      : 'item-nav-link'
+                  }
                 >
                   Repositories
                 </Link>
@@ -70,8 +62,11 @@ class Header extends Component {
               <li>
                 <Link
                   to="/analysis"
-                  className="item-nav-link"
-                  onClick={this.onClickNavLink}
+                  className={
+                    currentPath === '/analysis'
+                      ? 'active-link item-nav-link'
+                      : 'item-nav-link'
+                  }
                 >
                   Analysis
                 </Link>
@@ -81,12 +76,15 @@ class Header extends Component {
 
           {activeStatus && (
             <nav>
-              <ul className="nav-items-container">
+              <ul className="nav-items-container active">
                 <li>
                   <Link
                     to="/"
-                    className="item-link"
-                    onClick={this.onClickNavLink}
+                    className={
+                      currentPath === '/'
+                        ? 'active-link item-link'
+                        : 'item-link'
+                    }
                   >
                     Home
                   </Link>
@@ -94,8 +92,11 @@ class Header extends Component {
                 <li>
                   <Link
                     to="/repositories"
-                    className="item-link"
-                    onClick={this.onClickNavLink}
+                    className={
+                      currentPath === '/repositories'
+                        ? 'active-link item-link'
+                        : 'item-link'
+                    }
                   >
                     Repositories
                   </Link>
@@ -103,8 +104,11 @@ class Header extends Component {
                 <li>
                   <Link
                     to="/analysis"
-                    className="item-link"
-                    onClick={this.onClickNavLink}
+                    className={
+                      currentPath === '/analysis'
+                        ? 'active-link item-link'
+                        : 'item-link'
+                    }
                   >
                     Analysis
                   </Link>

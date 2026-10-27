@@ -4,10 +4,8 @@ import {HiOutlineSearch} from 'react-icons/hi'
 import {RiBuildingLine} from 'react-icons/ri'
 import {IoLocationOutline} from 'react-icons/io5'
 import {IoMdLink} from 'react-icons/io'
-
 import UsernameContext from '../../context/UsernameContext'
 import Header from '../Header'
-
 import './index.css'
 
 const apiStatusConstants = {
@@ -20,50 +18,63 @@ const apiStatusConstants = {
 class Home extends Component {
   state = {
     profileDetails: null,
-    isError: false,
-    errorMsg: '',
     apiStatus: apiStatusConstants.initial,
+    errorMsg: '',
   }
 
   getGitHubUserProfileDetails = async username => {
     this.setState({
       apiStatus: apiStatusConstants.inProgress,
-      profileDetails: null,
-      isError: false,
       errorMsg: '',
     })
 
-    const url = `https://apis2.ccbp.in/gpv/profile-details/${username}?api_key=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`
+    const apiUrl = `https://apis2.ccbp.in/gpv/profile-details/${username}?api_key=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`
 
     try {
-      const response = await fetch(url)
+      const response = await fetch(apiUrl)
 
       if (!response.ok) {
         this.setState({
           apiStatus: apiStatusConstants.failure,
+          profileDetails: null,
         })
         return
       }
 
       const data = await response.json()
 
-      if (!data || !data.login) {
-        this.setState({
-          apiStatus: apiStatusConstants.failure,
-        })
-        return
-      }
-
       const updatedData = {
         avatarUrl: data.avatar_url,
         bio: data.bio,
         blog: data.blog,
         company: data.company,
+        createdAt: data.created_at,
+        email: data.email,
+        eventsUrl: data.events_url,
         followers: data.followers,
+        followersUrl: data.followers_url,
         following: data.following,
+        followingUrl: data.following_url,
+        gistsUrl: data.gists_url,
+        gravatarId: data.gravatar_id,
+        hireable: data.hireable,
+        htmlUrl: data.html_url,
+        id: data.id,
         location: data.location,
         login: data.login,
         name: data.name,
+        nodeId: data.node_id,
+        organizationsUrl: data.organizations_url,
+        publicGists: data.public_gists,
+        receivedEventsUrl: data.received_events_url,
+        reposUrl: data.repos_url,
+        siteAdmin: data.site_admin,
+        starredUrl: data.starred_url,
+        subscriptionsUrl: data.subscriptions_url,
+        twitterUsername: data.twitter_username,
+        type: data.type,
+        updatedAt: data.updated_at,
+        url: data.url,
         publicRepos: data.public_repos,
       }
 
@@ -73,33 +84,44 @@ class Home extends Component {
       })
     } catch (error) {
       this.setState({
+        profileDetails: null,
         apiStatus: apiStatusConstants.failure,
       })
     }
   }
 
-  onClickSearch = () => {
-    const {username} = this.context
+  onClickSearch = username => {
+    const trimmedUsername = username.trim()
 
-    if (!username || username.trim() === '') {
+    if (trimmedUsername === '') {
       this.setState({
-        isError: true,
-        errorMsg: 'Enter the valid github username',
+        errorMsg: 'Enter a valid GitHub username.',
         profileDetails: null,
         apiStatus: apiStatusConstants.initial,
       })
       return
     }
 
-    this.getGitHubUserProfileDetails(username.trim())
+    this.setState({errorMsg: ''})
+    this.getGitHubUserProfileDetails(trimmedUsername)
+  }
+
+  onClickTryAgain = () => {
+    const {username} = this.context
+
+    if (username.trim() !== '') {
+      this.getGitHubUserProfileDetails(username.trim())
+    } else {
+      this.setState({
+        apiStatus: apiStatusConstants.initial,
+        profileDetails: null,
+        errorMsg: '',
+      })
+    }
   }
 
   renderGithubDetailsOfProfile = () => {
     const {profileDetails} = this.state
-
-    if (!profileDetails) {
-      return null
-    }
 
     const {
       avatarUrl,
@@ -112,36 +134,39 @@ class Home extends Component {
       publicRepos,
       company,
       location,
+      organizationsUrl,
     } = profileDetails
 
     return (
-      <div className="repo-item">
+      <div data-testid="repoItem" className="repo-item">
         <div className="profileDetailsContainer">
-          <img src={avatarUrl} alt={name || login} className="avatar-url" />
-
-          <h1 className="name">{name || login}</h1>
+          <img src={avatarUrl} alt={name} className="avatar-url" />
           <p className="login">{login}</p>
+          <h1 className="name">{name}</h1>
 
-          <p className="bio-heading">BIO</p>
-          <p className="bio">{bio || 'No bio available'}</p>
+          <p className="bio">BIO</p>
+          <p className="bio">{bio}</p>
+
+          <p className="bio">Blog</p>
+          <p className="bio">{blog}</p>
 
           <div className="followers-following-public-container">
             <div className="followers-container">
-              <p className="followers">{followers ?? 0}</p>
+              <p className="followers">{followers}</p>
               <p className="followers-heading">FOLLOWERS</p>
             </div>
 
             <hr className="hor-line" />
 
             <div className="following-container">
-              <p className="followers">{following ?? 0}</p>
+              <p className="followers">{following}</p>
               <p className="followers-heading">FOLLOWING</p>
             </div>
 
             <hr className="hor-line" />
 
             <div className="pubic-repos-container">
-              <p className="followers">{publicRepos ?? 0}</p>
+              <p className="followers">{publicRepos}</p>
               <p className="followers-heading">PUBLIC REPOS</p>
             </div>
           </div>
@@ -151,7 +176,7 @@ class Home extends Component {
               <p className="company-heading">Company</p>
               <div className="companyUrl">
                 <RiBuildingLine className="icon-style" />
-                <p className="company">{company || 'Not available'}</p>
+                <p className="company">{company}</p>
               </div>
             </div>
 
@@ -159,27 +184,17 @@ class Home extends Component {
               <p className="company-heading">Location</p>
               <div className="companyUrl">
                 <IoLocationOutline className="icon-style" />
-                <p className="company">{location || 'Not available'}</p>
+                <p className="company">{location}</p>
               </div>
             </div>
 
             <div className="company-container">
-              <p className="company-heading">Blog</p>
+              <p className="company-heading">Company Url</p>
               <div className="companyUrl">
                 <IoMdLink className="icon-style" />
-
-                {blog ? (
-                  <a
-                    href={blog}
-                    className="company"
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    {blog}
-                  </a>
-                ) : (
-                  <p className="company">Not available</p>
-                )}
+                <a href={organizationsUrl} className="company">
+                  {organizationsUrl}
+                </a>
               </div>
             </div>
           </div>
@@ -191,17 +206,18 @@ class Home extends Component {
   renderFailureView = () => (
     <div className="failureContainer">
       <h1 className="heading">GitHub Profile Visualizer</h1>
-
       <img
         src="https://res.cloudinary.com/ddsn9feta/image/upload/v1718604995/Group_7522_f4ueqy.png"
         alt="failure view"
         className="error-view"
       />
-
-      <p className="errorName">Something went wrong. Please try again</p>
-
-      <button className="tryButton" type="button" onClick={this.onClickSearch}>
-        Try Again
+      <p className="errorName">Something went wrong. Please try again.</p>
+      <button
+        className="tryButton"
+        type="button"
+        onClick={this.onClickTryAgain}
+      >
+        Try again
       </button>
     </div>
   )
@@ -212,78 +228,66 @@ class Home extends Component {
     </div>
   )
 
-  renderHomeView = () => (
-    <div>
-      <h1 className="heading">GitHub Profile Visualizer</h1>
+  renderContent = () => {
+    const {errorMsg, apiStatus, profileDetails} = this.state
 
-      <img
-        src="https://res.cloudinary.com/ddsn9feta/image/upload/v1718599647/Group_21x-mobileview_iyuarb.png"
-        alt="gitHub profile visualizer home page"
-        className="homeImage"
-      />
-    </div>
-  )
-
-  renderGithubProfilesDetails = () => {
-    const {apiStatus} = this.state
-
-    switch (apiStatus) {
-      case apiStatusConstants.success:
-        return this.renderGithubDetailsOfProfile()
-
-      case apiStatusConstants.failure:
-        return this.renderFailureView()
-
-      case apiStatusConstants.inProgress:
-        return this.renderLoaderView()
-
-      default:
-        return this.renderHomeView()
+    if (apiStatus === apiStatusConstants.inProgress) {
+      return this.renderLoaderView()
     }
+
+    if (apiStatus === apiStatusConstants.failure) {
+      return this.renderFailureView()
+    }
+
+    if (errorMsg) {
+      return <p className="inputErrorMsg">{errorMsg}</p>
+    }
+
+    if (apiStatus === apiStatusConstants.success && profileDetails) {
+      return this.renderGithubDetailsOfProfile()
+    }
+
+    return (
+      <div className="github-container">
+        <h1 className="heading">GitHub Profile Visualizer</h1>
+        <img
+          src="https://res.cloudinary.com/ddsn9feta/image/upload/v1718599647/Group_21x-mobileview_iyuarb.png"
+          alt="gitHub profile visualizer home page"
+          className="homeImage"
+        />
+      </div>
+    )
   }
 
   render() {
-    const {isError, errorMsg} = this.state
     const {username, changeUserName} = this.context
 
     return (
       <>
         <Header />
-
         <div className="home-container">
           <div className="input-container">
             <input
               type="search"
-              placeholder="Enter github username"
-              className="input-search-style"
               value={username}
-              onChange={event => {
-                changeUserName(event.target.value)
-
-                if (isError) {
-                  this.setState({
-                    isError: false,
-                    errorMsg: '',
-                  })
-                }
-              }}
+              onChange={event => changeUserName(event.target.value)}
+              placeholder="Enter GitHub username"
+              className="input-search-style"
             />
 
             <div className="search-icon-container">
               <button
                 type="button"
-                onClick={this.onClickSearch}
                 className="search-button"
                 data-testid="searchButton"
+                onClick={() => this.onClickSearch(username)}
               >
                 <HiOutlineSearch className="search-icon" />
               </button>
             </div>
           </div>
 
-          {isError && <p className="inputErrorMsg">{errorMsg}</p>}
-
-          {this.renderGithubProfilesDetails()}
+          {this.renderContent()}
         </div>
       </>
     )
