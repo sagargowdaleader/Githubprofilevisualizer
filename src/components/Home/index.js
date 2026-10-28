@@ -28,7 +28,7 @@ class Home extends Component {
       errorMsg: '',
     })
 
-    const apiUrl = `https://apis2.ccbp.in/gpv/profile-details/${username}?api_key=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`
+    const apiUrl = `https://apis2.ccbp.in/gpv/profile-details/${username}?api_key=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`
 
     try {
       const response = await fetch(apiUrl)
@@ -246,7 +246,6 @@ class Home extends Component {
     if (apiStatus === apiStatusConstants.success && profileDetails) {
       return this.renderGithubDetailsOfProfile()
     }
-
     return (
       <div className="github-container">
         <h1 className="heading">GitHub Profile Visualizer</h1>
@@ -269,10 +268,10 @@ class Home extends Component {
           <div className="input-container">
             <input
               type="search"
-              value={username}
-              onChange={event => changeUserName(event.target.value)}
               placeholder="Enter GitHub username"
               className="input-search-style"
+              value={username}
+              onChange={event => changeUserName(event.target.value)}
             />
 
             <div className="search-icon-container">

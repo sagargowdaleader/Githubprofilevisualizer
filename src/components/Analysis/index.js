@@ -47,7 +47,7 @@ class Analysis extends Component {
 
     this.setState({apiStatus: apiStatusConstants.inProgress})
 
-    const url = `https://apis2.ccbp.in/gpv/profile-summary/${username}?api_key=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`
+    const url = `https://apis2.ccbp.in/gpv/profile-summary/${username}?api_key=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`
 
     try {
       const response = await fetch(url, {method: 'GET'})
@@ -93,7 +93,7 @@ class Analysis extends Component {
 
     const quarterCommitData = Object.keys(quarterCommitCount).map(key => ({
       name: key,
-      commits: quarterCommitCount[key],
+      quarterCommitCount: quarterCommitCount[key],
     }))
 
     const langRepoData = Object.keys(langRepoCount).map(key => ({

@@ -2,7 +2,7 @@
   width: 100%;
   min-height: 90vh;
   gap: 0px;
-  opacity: 0px;
+  opacity: 1px;
   background: #0f172a;
 }
 .bio {
